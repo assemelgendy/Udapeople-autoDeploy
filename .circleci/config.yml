@@ -83,11 +83,12 @@ jobs:
       - checkout
       - restore_cache:
             key: backend-build
-      - run: npm audit fix --audit-level=critical --force
       - run:
           name: check for backend vulnerabilities
           working_directory: ./backend
-          command: npm audit --audit-level=critical
+          command: |
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
 workflows:
   default:
     jobs:
