@@ -31,7 +31,7 @@ jobs:
           working_directory: ./backend
           command: |
             npm i
-            npm run build
+            npm run start
 #            exit 1
       - save_cache:
           paths: [backend/node_modules]
