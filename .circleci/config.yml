@@ -47,7 +47,7 @@ jobs:
           working_directory: ./frontend
           command: |
             npm i
-            nmp run test
+            npm run test
                 
   test-backend:
     docker:
@@ -61,7 +61,7 @@ jobs:
           working_directory: ./backend
           command: |
             npm i
-            nmp run test
+            npm run test
 workflows:
   default:
     jobs:
