@@ -12,7 +12,7 @@ jobs:
           name: Build front-end
           working_directory: ./frontend
           command: |
-            npm run build
+            npm run lint
             exit 1
       - save_cache:
           paths: [frontend/node_modules]
