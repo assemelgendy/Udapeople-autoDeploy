@@ -119,7 +119,7 @@ jobs:
           name: Deploy Backend
           working_directory: ./.circleci/files
           command: |
-            aws aws cloudformation deploy \
+            aws cloudformation deploy \
               --template-file backend.yaml \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
