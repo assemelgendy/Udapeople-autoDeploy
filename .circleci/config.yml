@@ -214,14 +214,11 @@ jobs:
       - checkout
       - attach_workspace:
           at: . 
-      - run: sudo npm install -g tsc \
-              && sudo npm install -g concurrently \
-              && sudo npm install -g typescript 
       - run:
           name: Run migrations
           working_directory: ./backend
           command: |
-            npm run migrations > migration_status
+            npm run migrations --force > migration_status
       - run:
           name: Send migration results to memstash
           working_directory: ./backend
