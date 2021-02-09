@@ -1,6 +1,10 @@
 ---
 - name: Configure udapeople infrastructure
   hosts: all
+  pre_tasks:
+    - name: "wait 60 seconds then move on"
+      wait_for:
+        timeout: 60
   user: ubuntu
   gather_facts: false
   vars:
@@ -9,7 +13,6 @@
     - ansible_stdout_callback: yaml
   roles:
     - configure-server
-    - configure-prometheus-node-exporter
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
