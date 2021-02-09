@@ -214,9 +214,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: . 
-      - run:  npm install -g tsc \
-              && npm install -g concurrently \
-              && npm install -g typescript \
+      - run: sudo npm install -g tsc \
+              && sudo npm install -g concurrently \
+              && sudo npm install -g typescript \ 
       - run:
           name: Run migrations
           working_directory: ./backend
