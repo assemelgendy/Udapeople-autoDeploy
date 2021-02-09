@@ -1,0 +1,29 @@
+deploy-backend:
+    docker:
+      - image: python:3.9.0-alpine
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          working_directory: /tmp
+          command: |
+            apk add --update ansible curl rsync openssh nodejs npm
+            ansible --version
+            pip install awscli
+            aws --version
+      - run:
+          name: Deploy backend
+          working_directory: .circleci/ansible
+          command: |
+            cat inventory
+            ansible-playbook -i inventory deploy-server.yml 
+#     - destroy_environment:
+#         id: ${CIRCLE_WORKFLOW_ID:0:7}
+#          when: on_fail
+#      - revert_migrations:
+#          id: ${CIRCLE_WORKFLOW_ID:0:7}
+#          when: on_fail

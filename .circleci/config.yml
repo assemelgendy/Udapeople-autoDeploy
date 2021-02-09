@@ -232,7 +232,7 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: a70218a1-d11e-4b9d-8c4b-40a457b8730a" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_${CIRCLE_WORKFLOW_ID:0:7}
             fi
             echo "WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}"  
-            
+
   deploy-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -271,36 +271,6 @@ jobs:
 #      - revert_migrations:
 #          id: ${CIRCLE_WORKFLOW_ID:0:7}
 #          when: on_fail
-         
-  deploy-backend:
-    docker:
-      - image: python:3.9.0-alpine
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      - attach_workspace:
-          at: .
-      - run:
-          name: Install dependencies
-          working_directory: /tmp
-          command: |
-            apk add --update ansible curl rsync openssh nodejs npm
-            ansible --version
-            pip install awscli
-            aws --version
-      - run:
-          name: Deploy backend
-          working_directory: ./.circleci/ansible
-          command: |
-            cat inventory
-            ansible-playbook -i inventory deploy-server.yml -vv
-#     - destroy_environment:
-#         id: ${CIRCLE_WORKFLOW_ID:0:7}
-#          when: on_fail
-#      - revert_migrations:
-#          id: ${CIRCLE_WORKFLOW_ID:0:7}
-#          when: on_fail
 
 workflows:
   default:
@@ -330,9 +300,6 @@ workflows:
             - scan-backend
             - scan-frontend
             - configure-infrastructure
-      - deploy-backend:
-          requires:
-            - run-migrations
       - deploy-frontend:
           requires:
             - run-migrations
