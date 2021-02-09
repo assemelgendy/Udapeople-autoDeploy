@@ -217,14 +217,6 @@ jobs:
 #      - run: npm install
       - run: npm install typescript --save-dev
       - run:
-          name: Install AWS CLI dependencies
-          working_directory: /tmp
-          command: |
-            sudo apt-get update && sudo apt-get install -yy less
-            curl "https://awscli.amazonaws.com/awscli-exe-linsux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - run:
           name: Run migrations
           working_directory: ./backend
           command: |
