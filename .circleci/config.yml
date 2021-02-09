@@ -213,9 +213,9 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .
-#install npm to solve isseu 
-      - run: npm install
+          at: . 
+#      - run: npm install
+      - run: npm install typescript --save-dev
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
