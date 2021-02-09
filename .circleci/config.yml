@@ -216,7 +216,7 @@ jobs:
           at: . 
       - run: sudo npm install -g tsc \
               && sudo npm install -g concurrently \
-              && sudo npm install -g typescript \ 
+              && sudo npm install -g typescript 
       - run:
           name: Run migrations
           working_directory: ./backend
