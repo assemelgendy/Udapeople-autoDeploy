@@ -214,13 +214,14 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: npm install 
+#install npm to solve isseu 
+      - run: npm install
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
           command: |
             sudo apt-get update && sudo apt-get install -yy less
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            curl "https://awscli.amazonaws.com/awscli-exe-linsux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
       - run:
