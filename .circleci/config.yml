@@ -214,6 +214,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run: npm install 
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
