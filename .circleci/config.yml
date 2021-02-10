@@ -214,8 +214,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - "packages"
+          keys: [backend-build]
       - run:
           name: Run migrations
           working_directory: ./backend
