@@ -172,10 +172,8 @@ jobs:
               --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> inventory
             cat inventory
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .circleci/ansible/inventory
+      - restore_cache:
+          keys: [deploy-infra]
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
@@ -187,8 +185,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          key: deploy-infra
       - run:
           name: Install dependencies
           working_directory: ./.circleci/ansible
@@ -212,8 +210,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          key: deploy-infra
       - run:
           name: Run migrations
           working_directory: ./backend
@@ -238,8 +236,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          key: deploy-infra
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
@@ -261,10 +259,8 @@ jobs:
           working_directory: ./frontend
           command: |
              aws s3 cp ./dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-      - persist_to_workspace:
-          root: .
-          paths:
-            - frontend/dist
+      - restore_cache:
+          keys: [frontend]
 #      - destroy_environment:
 #          id: ${CIRCLE_WORKFLOW_ID:0:7}
 #          when: on_fail
@@ -279,8 +275,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      - attach_workspace:
-          at: .
+      -  restore_cache:
+            key: deploy-infra
       - run:
           name: Install dependencies
           working_directory: /tmp
