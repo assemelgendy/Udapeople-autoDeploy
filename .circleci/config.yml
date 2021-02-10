@@ -173,7 +173,7 @@ jobs:
               --output text >> inventory
             cat inventory
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
             - .circleci/ansible/inventory
       - destroy_environment:
@@ -239,7 +239,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/
+          at: .
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
@@ -280,7 +280,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
       - attach_workspace:
-          at: ~/
+          at: .
       - run:
           name: Install dependencies
           working_directory: /tmp
