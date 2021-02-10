@@ -234,7 +234,38 @@ jobs:
             fi
             echo "WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}"  
 
+  deploy-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install AWS CLI dependencies
+          working_directory: /tmp
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Get backend url
+          working_directory: ./frontend
+          command: |
+            export API_URL=$(curl -H "token: 4292407b-7685-40a1-a45a-26deee1d80b7" --request GET https://api.memstash.io/values/BACKEND_URL)
+            echo "${API_URL}"
+            npm run build
 
+      - run:
+          name: Deploy frontend objects
+          working_directory: ./frontend
+          command: |
+             aws s3 cp ./dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend/dist
 
   deploy-backend:
     docker:
@@ -308,6 +339,9 @@ workflows:
             - scan-frontend
             - configure-infrastructure
       - deploy-backend:
+          requires:
+            - run-migrations
+      - deploy-frontend:
           requires:
             - run-migrations
       
