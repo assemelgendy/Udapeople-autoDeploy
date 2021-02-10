@@ -214,7 +214,7 @@ jobs:
       - checkout
       - restore_cache:
             key: backend-build
-#      - run: npm install
+
       - run:
           name: Run migrations
           working_directory: ./backend
@@ -355,10 +355,10 @@ workflows:
             - scan-backend
             - scan-frontend
             - configure-infrastructure
-      - deploy-frontend:
+      - deploy-backend:
           requires:
             - run-migrations
-      - deploy-backend:
+      - deploy-frontend:
           requires:
             - run-migrations
       - smoke-test:
