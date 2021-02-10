@@ -45,10 +45,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - save_cache:
-          paths:
-            - /src/node_modules
-          key: "packages"
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Back-end build
           working_directory: ./backend
@@ -65,8 +63,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - "packages"
+          keys: [frontend-build]
       - run:
           name: Build front-end
           working_directory: ./frontend
@@ -83,8 +80,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - "packages"
+          keys: [frontend-build]
       - run:
           name: Front-end test
           working_directory: ./frontend
@@ -98,8 +94,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - "packages"
+          keys: [backend-build]
       - run:
           name: Back-end test
           working_directory: ./backend
@@ -113,8 +108,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - "packages"
+          keys: [frontend-build]
       - run:
           name: check for frontend vulnerabilities
           working_directory: ./frontend
@@ -127,8 +121,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - "packages"
+          keys: [backend-build]
       - run:
           name: check for backend vulnerabilities
           working_directory: ./backend
