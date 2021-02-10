@@ -40,23 +40,6 @@ commands:
           when: << parameters.when >>
             
 jobs:
-  build-backend:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-build]
-      - run:
-          name: Back-end build
-          working_directory: ./backend
-          command: |
-            npm i
-            npm run build
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
-
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -73,6 +56,23 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+
+  build-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Back-end build
+          working_directory: ./backend
+          command: |
+            npm i
+            npm run build
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
   
   test-frontend:
     docker:
@@ -80,7 +80,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build]
+            key: frontend-build
       - run:
           name: Front-end test
           working_directory: ./frontend
@@ -94,7 +94,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+            key: backend-build
       - run:
           name: Back-end test
           working_directory: ./backend
@@ -108,7 +108,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build]
+            key: frontend-build
       - run:
           name: check for frontend vulnerabilities
           working_directory: ./frontend
@@ -121,7 +121,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+            key: backend-build
       - run:
           name: check for backend vulnerabilities
           working_directory: ./backend
@@ -172,10 +172,10 @@ jobs:
               --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> inventory
             cat inventory
-      - save_cache:
+      - persist_to_workspace:
+          root: .
           paths:
             - .circleci/ansible/inventory
-          key: "inventory"
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
@@ -187,9 +187,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      - restore_cache:
-          keys:
-            - "inventory"
+      - attach_workspace:
+          at: .
       - run:
           name: Install dependencies
           working_directory: ./.circleci/ansible
@@ -213,8 +212,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      - attach_workspace:
+          at: .
       - run:
           name: Run migrations
           working_directory: ./backend
@@ -239,9 +238,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - "inventory"
+      - attach_workspace:
+          at: .
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
@@ -263,8 +261,10 @@ jobs:
           working_directory: ./frontend
           command: |
              aws s3 cp ./dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-      - restore_cache:
-          keys: [frontend]
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend/dist
 #      - destroy_environment:
 #          id: ${CIRCLE_WORKFLOW_ID:0:7}
 #          when: on_fail
@@ -279,9 +279,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      - restore_cache:
-          keys:
-            - "inventory"
+      - attach_workspace:
+          at: .
       - run:
           name: Install dependencies
           working_directory: /tmp
@@ -325,6 +324,7 @@ jobs:
           command: |
             URL="https://s3.us-west-2.amazonaws.com/udapeople-${CIRCLE_WORKFLOW_ID:0:7}/index.html"
             curl -s ${URL} | grep -q "Welcome"
+#test smoke again
 
 workflows:
   default:
