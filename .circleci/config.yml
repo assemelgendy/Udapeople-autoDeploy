@@ -173,9 +173,9 @@ jobs:
               --output text >> inventory
             cat inventory
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
-            - .circleci/ansible/inventory
+            - Udapeople-autoDeploy/.circleci/ansible/inventory
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
@@ -279,8 +279,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      - restore_cache:
-            key: backend-build
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           working_directory: /tmp
