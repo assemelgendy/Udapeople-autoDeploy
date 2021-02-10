@@ -214,6 +214,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run: npm install
       - run:
           name: Run migrations
           working_directory: ./backend
