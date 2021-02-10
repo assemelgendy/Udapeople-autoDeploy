@@ -211,7 +211,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: deploy-infra
+          key: backend-build
       - run:
           name: Run migrations
           working_directory: ./backend
