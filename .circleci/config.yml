@@ -40,30 +40,15 @@ commands:
           when: << parameters.when >>
             
 jobs:
-  build-frontend:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-build]
-      - run:
-          name: Build front-end
-          working_directory: ./frontend
-          command: |
-            npm i
-            npm run build
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
-
   build-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      - save_cache:
+          paths:
+            - /src/node_modules
+          key: "packages"
       - run:
           name: Back-end build
           working_directory: ./backend
@@ -73,6 +58,24 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+
+  build-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - "packages"
+      - run:
+          name: Build front-end
+          working_directory: ./frontend
+          command: |
+            npm i
+            npm run build
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
   
   test-frontend:
     docker:
@@ -80,7 +83,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-            key: frontend-build
+          keys:
+            - "packages"
       - run:
           name: Front-end test
           working_directory: ./frontend
@@ -94,7 +98,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-            key: backend-build
+          keys:
+            - "packages"
       - run:
           name: Back-end test
           working_directory: ./backend
@@ -108,7 +113,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-            key: frontend-build
+          keys:
+            - "packages"
       - run:
           name: check for frontend vulnerabilities
           working_directory: ./frontend
@@ -121,14 +127,15 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-            key: backend-build
+          keys:
+            - "packages"
       - run:
           name: check for backend vulnerabilities
           working_directory: ./backend
           command: |
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-#test deploy
+
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -172,8 +179,10 @@ jobs:
               --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> inventory
             cat inventory
-      - restore_cache:
-          keys: [deploy-infra]
+      - save_cache:
+          paths:
+            - .circleci/ansible/inventory
+          key: "inventory"
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
@@ -186,7 +195,8 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
       - restore_cache:
-          key: deploy-infra
+          keys:
+            - "inventory"
       - run:
           name: Install dependencies
           working_directory: ./.circleci/ansible
@@ -211,7 +221,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: backend-build
+          keys:
+            - "packages"
       - run:
           name: Run migrations
           working_directory: ./backend
@@ -237,7 +248,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: deploy-infra
+          keys:
+            - "inventory"
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
@@ -275,8 +287,9 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["62:59:63:84:5d:e2:22:f0:27:d7:2e:25:3b:a0:10:91"]
-      -  restore_cache:
-            key: deploy-infra
+      - restore_cache:
+          keys:
+            - "inventory"
       - run:
           name: Install dependencies
           working_directory: /tmp
