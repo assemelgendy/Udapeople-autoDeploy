@@ -298,13 +298,14 @@ jobs:
           name: Deploy backend
           working_directory: .circleci/ansible
           command: |
+            
             printenv >> ~/project/backend/.env
             cd ~/project
             tar -czvf backend.tgz backend
             cd ~/project/.circleci/ansible
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Project,Values=udapeople" --output text >> inventory.txt
-            cat /root/project/.circleci/ansible/inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            cat /root/project/.circleci/ansible/inventory
+            ansible-playbook -i inventory deploy-backend.yml
 #      - destroy_environment:
 #          id: ${CIRCLE_WORKFLOW_ID:0:7}
 #          when: on_fail
