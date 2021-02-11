@@ -2,10 +2,11 @@ public GitHub repository:
 https://github.com/assemelgendy/Udapeople-autoDeploy
 
 S3 Bucket:
-https://s3.us-west-2.amazonaws.com/udapeople-8c0eca7/index.html
+https://udapeople-4504e04.s3-us-west-2.amazonaws.com/index.html
 
 CloudFront distribution:
+d1d9bmguwdaszz.cloudfront.net
+http://udapeople-4504e04.s3.amazonaws.com/index.html
 
-
-back-end server in EC:
-
+back-end server in EC2:
+ec2-34-222-231-224.us-west-2.compute.amazonaws.com
