@@ -1,5 +1,5 @@
 version: 2.1
-#final 
+#final
 commands:
   destroy_environment:
     description: Destroy Cloud Formation Stacks and infrastructure
@@ -135,7 +135,8 @@ jobs:
           name: check for backend vulnerabilities
           working_directory: ./backend
           command: |
-            npm audit fix --audit-level=critical --force
+            # npm audit fix --audit-level=critical --force
+            npm audit fix
             npm audit --audit-level=critical
 
   deploy-infrastructure:
@@ -438,9 +439,17 @@ workflows:
       - deploy-backend:
           requires:
             - run-migrations
+          filters:
+            branches:
+              only:
+                - master
       - deploy-frontend:
           requires:
             - run-migrations
+          filters:
+            branches:
+              only:
+                - master
       - smoke-test:
           requires:
             - deploy-backend
