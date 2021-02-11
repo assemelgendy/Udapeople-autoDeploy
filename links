@@ -2,13 +2,13 @@ public GitHub repository:
 https://github.com/assemelgendy/Udapeople-autoDeploy
 
 S3 Bucket:
-https://udapeople-626678f.s3-us-west-2.amazonaws.com/index.html#/employees
+https://udapeople-d9f681e.s3-us-west-2.amazonaws.com/index.html#/employees
 
 CloudFront distribution:
-udapeople-626678f.s3.amazonaws.com/index.html
+udapeople-d9f681e.s3.amazonaws.com/index.html
 
 back-end server in EC2:
-ec2-54-189-155-180.us-west-2.compute.amazonaws.com:3030/api/status
+http://ec2-34-214-157-96.us-west-2.compute.amazonaws.com:3030/api/status
 
 public URL to your Prometheus Server:
 http://ec2-35-167-29-254.us-west-2.compute.amazonaws.com:9090
