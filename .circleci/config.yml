@@ -460,4 +460,3 @@ workflows:
       - cleanup:
           requires:
             - cloudfront-update
-#update package.json
