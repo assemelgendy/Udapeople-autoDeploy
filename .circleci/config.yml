@@ -1,5 +1,5 @@
 version: 2.1
-#final
+
 commands:
   destroy_environment:
     description: Destroy Cloud Formation Stacks and infrastructure
