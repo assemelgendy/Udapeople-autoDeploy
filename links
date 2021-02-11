@@ -10,3 +10,6 @@ http://udapeople-4504e04.s3.amazonaws.com/index.html
 
 back-end server in EC2:
 ec2-34-222-231-224.us-west-2.compute.amazonaws.com
+
+public URL to your Prometheus Server:
+http://ec2-35-167-29-254.us-west-2.compute.amazonaws.com:9090
